@@ -8,7 +8,7 @@ BEGIN;
 но не мешает работать с другими ресторанами. */
 SELECT *
 FROM cafe.restaurants
-WHERE menu -> 'Напиток' ? 'Капучино'
+WHERE menu -> 'Кофе' ? 'Капучино'
 FOR UPDATE;
 -- В отдельном CTE рассчитываем новые цены:
 WITH updated_menu AS (
@@ -16,13 +16,13 @@ WITH updated_menu AS (
         restaurant_uuid,
         jsonb_set(
             menu,
-            '{Напиток,Капучино}',
+            '{Кофе,Капучино}',
             to_jsonb(
-                ROUND((menu -> 'Напиток' ->> 'Капучино')::NUMERIC * 1.2)
+                ROUND((menu -> 'Кофе' ->> 'Капучино')::NUMERIC * 1.2)
             )
         ) AS new_menu
     FROM cafe.restaurants
-    WHERE menu -> 'Напиток' ? 'Капучино'
+    WHERE menu -> 'Кофе' ? 'Капучино'
 )
 -- Обновляем меню только у нужных заведений:
 UPDATE cafe.restaurants r
